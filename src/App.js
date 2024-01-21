@@ -1,47 +1,48 @@
 import { useState, useEffect } from 'react';
 import Detail from './Detail';
+import PeopleResult from './PeopleResult';
 
-const API_URL = 'https://api.nationalize.io/';
+const API_URL = 'https://randomuser.me/api';
 
 const App = () => {
-    const [name, setName] = useState('');
-    const [searchName, setSearchName] = useState([]);
+    // const [name, setName] = useState('');
+    // const [searchName, setSearchName] = useState([]);
+    const [randomPeople, setRandomPeople] = useState([]);
 
     // api request 
 
-    const getNationalize = async(name) => {
-        const response = await fetch (`${API_URL}?name=${name}`);
+    const getRandomPeople = async() => {
+        const response = await fetch(`${API_URL}`);
         const data = await response.json();
-        console.log(data.country);
-        setSearchName(data.country);
+
+        console.log(data.results);
+        setRandomPeople(data.results);
     }
 
     // getting default values after page reload
 
-    // useEffect(() => {
-    //     getNationalize('Jayson');
-    // }, []);
+    useEffect(() => {
+        getRandomPeople();
+    }, []);
 
     return (
         <div className='app'>
-            <div className='displayName'>
-                <h1>Name: {name}</h1>
-            </div>
-            <div className='formInput'>
-                <input value={name} onChange={(e) => setName(e.target.value)} />
-                <button onClick={() => getNationalize(name)}>Submit</button>
-            </div>
+            {/* <button onClick={() => getRandomPeople()}>
+                Fetch Random People
+            </button> */}
+
+            <h1>Result</h1>
             {
-                searchName?.length > 0
-                ? (
-                    <div className='container'>
-                        {searchName.map((res) => (
-                            <Detail res = {res} />
+                randomPeople?.length > 0
+                ?(
+                    <div className='Result'>
+                        {randomPeople.map((people) => (
+                            <PeopleResult getPeople = {people}  />
                         ))}
                     </div>
                 ) : (
-                    <div className='empty'>
-                        <h2>No result</h2>
+                    <div>
+                        <h1>No Result</h1>
                     </div>
                 )
             }
